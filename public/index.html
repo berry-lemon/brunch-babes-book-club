@@ -355,18 +355,6 @@
     .event-row:hover,
     .event-row:focus-within { background: var(--pink-light); }
 
-    /* ── Stats grid ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      margin-top: 64px;
-      border-top: 1px solid rgba(227,38,54,.15);
-      padding-top: 52px;
-      text-align: center;
-    }
-    .stats-col { padding: 0 20px; }
-    .stats-col:not(:last-child) { border-right: 1px solid rgba(227,38,54,.15); }
-
     /* ── Footer ── */
     footer { background: var(--ink); padding: 52px 56px 40px; }
 
@@ -437,20 +425,6 @@
 
       /* Event rows */
       .event-row      { padding: 24px 20px; gap: 16px; }
-
-      /* Stats — stack vertically */
-      .stats-grid {
-        grid-template-columns: 1fr;
-        margin-top: 48px;
-        border-top: none;
-        padding-top: 0;
-      }
-      .stats-col {
-        border-right: none !important;
-        border-top: 1px solid rgba(227,38,54,.15);
-        padding: 28px 0;
-        text-align: center;
-      }
 
       /* Join section */
       .join-grid      { grid-template-columns: 1fr; gap: 40px; }
@@ -747,22 +721,6 @@
             <p class="body-font" style="font-size:15px;line-height:1.75;color:var(--ink-mid);">
               Private community, exclusive content, and member perks. The warmest corner of the internet.
             </p>
-          </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="reveal stats-grid">
-          <div class="stats-col">
-            <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">12k+</p>
-            <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Members</p>
-          </div>
-          <div class="stats-col">
-            <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">48</p>
-            <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Books Read</p>
-          </div>
-          <div class="stats-col">
-            <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">4 yrs</p>
-            <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Running Strong</p>
           </div>
         </div>
 
