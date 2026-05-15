@@ -1,0 +1,17 @@
+{
+  "name": "brunch-babes-book-club",
+  "version": "1.0.0",
+  "description": "Official website for The Brunch Babes Book Club",
+  "scripts": {
+    "dev": "node dev/serve.mjs",
+    "screenshot": "node dev/screenshot.mjs http://localhost:3000",
+    "gen-images": "node dev/generate-images.mjs"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.42.0"
+  },
+  "dependencies": {
+    "@google/genai": "^2.2.0",
+    "dotenv": "^17.4.2"
+  }
+}

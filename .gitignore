@@ -1,0 +1,6 @@
+.env
+node_modules/
+temporary screenshots/
+.DS_Store
+.claude/
+skills/
