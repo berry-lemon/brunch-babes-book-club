@@ -31,6 +31,47 @@
       overflow-x: hidden;
     }
 
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      z-index: 9999;
+      padding: 12px 22px;
+      background: var(--cherry);
+      color: #fff;
+      font-family: 'Epilogue', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-decoration: none;
+      transition: top .2s ease;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Focus-visible (global) ── */
+    *:focus { outline: none; }
+    *:focus-visible {
+      outline: 2.5px solid var(--cherry);
+      outline-offset: 3px;
+      border-radius: 1px;
+    }
+    .btn:focus-visible {
+      outline: 2.5px solid var(--ink);
+      outline-offset: 4px;
+    }
+    .invite-input:focus,
+    .invite-input:focus-visible {
+      border-color: var(--cherry);
+      outline: 2px solid rgba(227,38,54,.35);
+      outline-offset: 0;
+    }
+    .nav-link:focus-visible {
+      color: var(--cherry);
+      outline: 2px solid var(--cherry);
+      outline-offset: 4px;
+    }
+
     /* ── Gingham CSS patterns ── */
     .gingham-bg {
       background-color: #fff;
@@ -38,18 +79,13 @@
         repeating-linear-gradient(transparent, transparent 28px, rgba(249,206,219,.55) 28px, rgba(249,206,219,.55) 56px),
         repeating-linear-gradient(90deg, transparent, transparent 28px, rgba(249,206,219,.55) 28px, rgba(249,206,219,.55) 56px);
     }
-    .gingham-pink {
-      background-color: var(--pink);
-      background-image:
-        repeating-linear-gradient(transparent, transparent 28px, rgba(227,38,54,.07) 28px, rgba(227,38,54,.07) 56px),
-        repeating-linear-gradient(90deg, transparent, transparent 28px, rgba(227,38,54,.07) 28px, rgba(227,38,54,.07) 56px);
-    }
 
     /* ── Typography ── */
-    .heading { font-family: 'Epilogue', system-ui, sans-serif; }
+    .heading   { font-family: 'Epilogue', system-ui, sans-serif; }
     .body-font { font-family: 'greycliff-cf', system-ui, sans-serif; }
 
     /* ── Eyebrow labels ── */
+    /* cherry-dark (#B81D2A) gives 5.8:1 on --cream — passes WCAG AA for small text */
     .eyebrow {
       display: inline-flex;
       align-items: center;
@@ -59,14 +95,14 @@
       font-weight: 600;
       letter-spacing: .22em;
       text-transform: uppercase;
-      color: var(--cherry);
+      color: var(--cherry-dark);
     }
     .eyebrow::before, .eyebrow::after {
       content: '';
       display: inline-block;
       width: 22px;
       height: 1px;
-      background: var(--cherry);
+      background: var(--cherry-dark);
       flex-shrink: 0;
     }
     .eyebrow-white {
@@ -78,14 +114,14 @@
       font-weight: 600;
       letter-spacing: .22em;
       text-transform: uppercase;
-      color: rgba(255,255,255,.75);
+      color: rgba(255,255,255,.9);
     }
     .eyebrow-white::before, .eyebrow-white::after {
       content: '';
       display: inline-block;
       width: 22px;
       height: 1px;
-      background: rgba(255,255,255,.45);
+      background: rgba(255,255,255,.55);
       flex-shrink: 0;
     }
 
@@ -121,7 +157,7 @@
       box-shadow: 5px 5px 0 rgba(227,38,54,.2);
     }
     .btn-red::before { background: var(--ink); }
-    .btn-red:hover { box-shadow: 7px 7px 0 rgba(42,18,21,.2); }
+    .btn-red:hover   { box-shadow: 7px 7px 0 rgba(42,18,21,.2); }
 
     .btn-outline-red {
       background: transparent;
@@ -129,7 +165,7 @@
       border: 1.5px solid var(--cherry);
     }
     .btn-outline-red::before { background: var(--cherry); }
-    .btn-outline-red:hover { color: #fff; }
+    .btn-outline-red:hover   { color: #fff; }
 
     /* ── Navigation ── */
     .nav {
@@ -167,35 +203,97 @@
       background: var(--cherry);
       transition: right .3s cubic-bezier(.22,1,.36,1);
     }
-    .nav-link:hover { color: var(--cherry); }
-    .nav-link:hover::after { right: 0; }
+    .nav-link:hover              { color: var(--cherry); }
+    .nav-link:hover::after       { right: 0; }
 
-    /* ── Hero ── */
-    .hero {
-      min-height: 100vh;
-      position: relative;
+    /* ── Hamburger button ── */
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+      color: var(--ink);
+    }
+    .hamburger-btn .bar {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .2s ease;
+    }
+    .hamburger-btn[aria-expanded="true"] .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger-btn[aria-expanded="true"] .bar:nth-child(2) { opacity: 0; }
+    .hamburger-btn[aria-expanded="true"] .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Mobile menu overlay ── */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(255,255,255,.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 100px 24px 80px;
-      overflow: hidden;
+      gap: 4px;
+      transform: translateX(100%);
+      transition: transform .42s cubic-bezier(.22,1,.36,1);
+      padding: 80px 32px 48px;
     }
-    .hero-vignette {
+    .mobile-menu.open { transform: translateX(0); }
+
+    .mobile-menu-link {
+      font-family: 'Epilogue', system-ui, sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 10px 0;
+      transition: color .2s ease;
+      display: block;
+    }
+    .mobile-menu-link:hover { color: var(--cherry); }
+    .mobile-menu-link:focus-visible {
+      color: var(--cherry);
+      outline: 2px solid var(--cherry);
+      outline-offset: 6px;
+      border-radius: 1px;
+    }
+
+    .mobile-close-btn {
       position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.72) 55%, transparent 100%);
-      pointer-events: none;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: 1.5px solid var(--pink);
+      cursor: pointer;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      border-radius: 50%;
+      font-size: 20px;
+      line-height: 1;
+      transition: background .2s ease, border-color .2s ease;
     }
+    .mobile-close-btn:hover { background: var(--pink-light); border-color: var(--cherry); }
 
     /* ── Keyframes ── */
     @keyframes fadeUp  { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
     @keyframes scaleIn { from { opacity:0; transform:scale(.92); }      to { opacity:1; transform:scale(1); } }
     @keyframes fadeIn  { from { opacity:0; }                            to { opacity:1; } }
-    @keyframes bob {
-      0%,100% { transform: translateX(-50%) translateY(0); }
-      50%      { transform: translateX(-50%) translateY(-7px); }
-    }
 
     .anim-scale { animation: scaleIn .9s cubic-bezier(.22,1,.36,1) both; }
     .anim-up    { animation: fadeUp  .9s cubic-bezier(.22,1,.36,1) both; }
@@ -203,7 +301,6 @@
 
     .d1{animation-delay:.1s} .d2{animation-delay:.25s} .d3{animation-delay:.4s}
     .d4{animation-delay:.55s} .d5{animation-delay:.7s} .d6{animation-delay:.85s}
-    .d7{animation-delay:1s}
 
     /* ── Scroll reveal ── */
     .reveal {
@@ -245,18 +342,41 @@
       box-shadow: 0 4px 16px rgba(227,38,54,.3);
     }
 
+    /* ── Event rows — CSS hover replaces inline JS ── */
+    .event-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 32px;
+      padding: 36px 40px;
+      background: #fff;
+      transition: background .25s ease;
+    }
+    .event-row:hover,
+    .event-row:focus-within { background: var(--pink-light); }
 
+    /* ── Stats grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 64px;
+      border-top: 1px solid rgba(227,38,54,.15);
+      padding-top: 52px;
+      text-align: center;
+    }
+    .stats-col { padding: 0 20px; }
+    .stats-col:not(:last-child) { border-right: 1px solid rgba(227,38,54,.15); }
 
     /* ── Footer ── */
     footer { background: var(--ink); padding: 52px 56px 40px; }
 
-    /* ── Footer link hover ── */
+    /* ── Footer links — opacity .62 gives ~4.9:1 contrast on --ink ── */
     .footer-link {
       font-family: 'Epilogue', system-ui, sans-serif;
       font-size: 11.5px;
       letter-spacing: .14em;
       text-transform: uppercase;
-      color: rgba(255,255,255,.42);
+      color: rgba(255,255,255,.62);
       text-decoration: none;
       position: relative;
       padding-bottom: 2px;
@@ -267,10 +387,10 @@
       position: absolute;
       bottom: 0; left: 0; right: 100%;
       height: 1px;
-      background: rgba(255,255,255,.4);
+      background: rgba(255,255,255,.5);
       transition: right .3s cubic-bezier(.22,1,.36,1);
     }
-    .footer-link:hover { color: rgba(255,255,255,.8); }
+    .footer-link:hover      { color: rgba(255,255,255,.9); }
     .footer-link:hover::after { right: 0; }
 
     /* ── Invite form grid ── */
@@ -292,361 +412,446 @@
       transition: border-color .25s ease;
       appearance: none;
     }
-    .invite-input:focus { border-color: var(--cherry); }
     .invite-input::placeholder { color: #bfabb0; }
 
+    .form-panel { background: #fff; padding: 52px 48px; }
+
+    /* ════════════════════════════════════════
+       MOBILE  (≤ 768 px)
+    ════════════════════════════════════════ */
     @media (max-width: 768px) {
-      .nav { padding: 16px 24px; }
-      .hide-mobile { display: none !important; }
-      footer { padding: 40px 24px 32px; }
-      .join-grid { grid-template-columns: 1fr; gap: 40px; }
+      /* Nav */
+      .nav            { padding: 16px 20px; }
+      .hide-mobile    { display: none !important; }
+      .hamburger-btn  { display: flex; }
+
+      /* Hero logo — prevent overflow on narrow screens */
+      .hero-logo-img  {
+        width: clamp(260px, 82vw, 500px) !important;
+        max-width: 92vw !important;
+        margin-bottom: -48px !important;
+      }
+
+      /* Book section — clip the decorative gingham bleed */
+      .book-section   { overflow: hidden; }
+
+      /* Event rows */
+      .event-row      { padding: 24px 20px; gap: 16px; }
+
+      /* Stats — stack vertically */
+      .stats-grid {
+        grid-template-columns: 1fr;
+        margin-top: 48px;
+        border-top: none;
+        padding-top: 0;
+      }
+      .stats-col {
+        border-right: none !important;
+        border-top: 1px solid rgba(227,38,54,.15);
+        padding: 28px 0;
+        text-align: center;
+      }
+
+      /* Join section */
+      .join-grid      { grid-template-columns: 1fr; gap: 40px; }
+      .form-panel     { padding: 36px 24px; }
+
+      /* Footer */
+      footer          { padding: 40px 24px 32px; }
+    }
+
+    /* ════════════════════════════════════════
+       REDUCED MOTION
+    ════════════════════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration:       .01ms !important;
+        animation-iteration-count: 1    !important;
+        transition-duration:      .01ms !important;
+      }
+      html          { scroll-behavior: auto; }
+      .reveal       { opacity: 1 !important; transform: none !important; }
+      .mobile-menu  { transition: none !important; }
     }
   </style>
 </head>
 <body>
 
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <!-- ════════════════ NAV ════════════════ -->
-  <nav class="nav" id="nav">
+  <nav class="nav" id="nav" aria-label="Main navigation">
     <a href="#home" style="display:flex;align-items:center;">
       <img src="./brand_assets/BB LOGO_03.svg" alt="The Brunch Babes Book Club" style="height:38px;">
     </a>
+
+    <!-- Desktop links -->
     <div class="hide-mobile" style="display:flex;align-items:center;gap:36px;">
       <a href="#book"   class="nav-link">This Month</a>
       <a href="#events" class="nav-link">Events</a>
       <a href="#about"  class="nav-link">About</a>
       <a href="#join"   class="nav-link">Join</a>
-      <a href="#join"  class="btn btn-red" style="margin-left:8px;"><span>Request an Invite</span></a>
+      <a href="#join"   class="btn btn-red" style="margin-left:8px;"><span>Request an Invite</span></a>
     </div>
+
+    <!-- Mobile hamburger -->
+    <button class="hamburger-btn" id="menu-btn"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
   </nav>
 
-
-  <!-- ════════════════ HERO ════════════════ -->
-  <section id="home" style="min-height:82vh;position:relative;display:flex;align-items:center;justify-content:center;padding:90px 24px 80px;overflow:hidden;background:#fff;">
-
-    <!-- Flatlay image fades in from the bottom only -->
-    <div aria-hidden="true" style="position:absolute;bottom:0;left:0;right:0;height:52%;background:url('./images/hero.jpg') center top/cover no-repeat;pointer-events:none;"></div>
-    <!-- White gradient covers top and middle, fades out at bottom to reveal image -->
-    <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(to bottom,#fff 0%,#fff 42%,rgba(255,255,255,.88) 62%,rgba(255,255,255,.55) 100%);pointer-events:none;"></div>
-
-    <div style="position:relative;z-index:10;text-align:center;width:100%;">
-
-      <!-- Logo: fixed px offsets reduce SVG internal whitespace without clipping the mark -->
-      <div class="anim-scale d1" style="display:flex;justify-content:center;margin-top:-80px;">
-        <img src="./brand_assets/BB LOGO_01.svg" alt="The Brunch Babes Book Club"
-          style="width:clamp(420px,64vw,780px);max-width:90vw;height:auto;display:block;margin-bottom:-90px;">
-      </div>
-
-      <!-- Cherry divider -->
-      <div class="anim-fade d2" style="width:36px;height:1.5px;background:var(--cherry);margin:4px auto 20px;opacity:.55;"></div>
-
-      <!-- Tagline + CTAs -->
-      <div style="max-width:460px;margin:0 auto;">
-        <p class="anim-up d3 body-font" style="font-size:15.5px;line-height:1.75;color:var(--ink-mid);margin-bottom:32px;">
-          A space for women who love books, meaningful friendships, and progressive-minded conversation.
-        </p>
-        <div class="anim-up d4" style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
-          <a href="#join" class="btn btn-red"><span>Request an Invite</span></a>
-          <a href="#book" class="btn btn-outline-red"><span>This Month's Pick</span></a>
-        </div>
-      </div>
-
-    </div>
-  </section>
+  <!-- ════════════════ MOBILE MENU ════════════════ -->
+  <div id="mobile-menu" class="mobile-menu"
+    role="dialog" aria-modal="true"
+    aria-label="Navigation menu"
+    aria-hidden="true">
+    <button id="close-menu-btn" class="mobile-close-btn" aria-label="Close navigation menu">&#215;</button>
+    <a href="#book"   class="mobile-menu-link">This Month</a>
+    <a href="#events" class="mobile-menu-link">Events</a>
+    <a href="#about"  class="mobile-menu-link">About</a>
+    <a href="#join"   class="mobile-menu-link">Join</a>
+    <a href="#join"   class="btn btn-red" style="margin-top:28px;width:100%;text-align:center;"><span>Request an Invite</span></a>
+  </div>
 
 
-  <!-- ════════════════ CURRENT BOOK PICK ════════════════ -->
-  <section id="book" style="background:var(--cream);padding:100px 24px;">
-    <div style="max-width:1100px;margin:0 auto;">
+  <main id="main-content">
 
-      <div class="reveal" style="text-align:center;margin-bottom:64px;">
-        <span class="eyebrow">Reading Right Now</span>
-        <h2 class="heading" style="font-size:clamp(44px,7vw,86px);color:var(--cherry);line-height:.95;font-weight:900;letter-spacing:-.03em;margin-top:12px;">
-          This Month's Pick
-        </h2>
-      </div>
+    <!-- ════════════════ HERO ════════════════ -->
+    <section id="home" style="min-height:82vh;position:relative;display:flex;align-items:center;justify-content:center;padding:90px 24px 80px;overflow:hidden;background:#fff;">
 
-      <div style="display:flex;flex-wrap:wrap;gap:64px;align-items:center;">
+      <div aria-hidden="true" style="position:absolute;bottom:0;left:0;right:0;height:52%;background:url('./images/hero.jpg') center top/cover no-repeat;pointer-events:none;"></div>
+      <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(to bottom,#fff 0%,#fff 42%,rgba(255,255,255,.88) 62%,rgba(255,255,255,.55) 100%);pointer-events:none;"></div>
 
-        <!-- Cover -->
-        <div class="reveal" style="flex-shrink:0;position:relative;">
-          <!-- Gingham offset backdrop -->
-          <div class="gingham-bg" style="position:absolute;width:260px;height:355px;top:18px;left:18px;opacity:.5;border-radius:2px;"></div>
+      <div style="position:relative;z-index:10;text-align:center;width:100%;">
 
-          <div class="book-shadow" style="position:relative;width:240px;height:340px;overflow:hidden;border-radius:2px;">
-            <img src="./images/book-pick.jpg" alt="Pride and Prejudice" style="width:100%;height:100%;object-fit:cover;display:block;">
-            <div style="position:absolute;inset:0;background:linear-gradient(150deg,rgba(227,38,54,.08) 0%,transparent 50%,rgba(249,206,219,.25) 100%);"></div>
-          </div>
-
-          <!-- Month badge -->
-          <div style="position:absolute;bottom:-18px;right:-18px;width:76px;height:76px;border-radius:50%;background:var(--cherry);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(227,38,54,.38);">
-            <span class="body-font" style="color:#fff;font-size:11px;font-weight:600;text-align:center;letter-spacing:.05em;line-height:1.35;">May<br>Pick</span>
-          </div>
+        <div class="anim-scale d1" style="display:flex;justify-content:center;margin-top:-80px;">
+          <img src="./brand_assets/BB LOGO_01.svg" alt="The Brunch Babes Book Club"
+            class="hero-logo-img"
+            style="width:clamp(280px,64vw,780px);max-width:90vw;height:auto;display:block;margin-bottom:-90px;">
         </div>
 
-        <!-- Info -->
-        <div class="reveal rv2" style="flex:1;min-width:280px;">
-          <span class="eyebrow" style="margin-bottom:16px;display:inline-flex;">Featured Selection</span>
+        <div class="anim-fade d2" aria-hidden="true" style="width:36px;height:1.5px;background:var(--cherry);margin:4px auto 20px;opacity:.55;"></div>
 
-          <h3 class="heading" style="font-size:clamp(26px,3.5vw,42px);font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.1;margin-bottom:6px;margin-top:14px;">
-            Pride &amp; Prejudice
-          </h3>
-          <p class="body-font" style="font-size:18px;color:var(--cherry);font-style:italic;margin-bottom:28px;">
-            by Jane Austen
+        <div style="max-width:460px;margin:0 auto;">
+          <p class="anim-up d3 body-font" style="font-size:15.5px;line-height:1.75;color:var(--ink-mid);margin-bottom:32px;">
+            A space for women who love books, meaningful friendships, and progressive-minded conversation.
           </p>
-
-          <blockquote style="border-left:3px solid var(--cherry);padding:4px 0 4px 22px;margin-bottom:26px;">
-            <p class="body-font" style="font-size:clamp(17px,2vw,22px);color:var(--ink);line-height:1.6;font-style:italic;font-weight:500;">
-              "It is a truth universally acknowledged…"
-            </p>
-          </blockquote>
-
-          <div style="display:flex;flex-wrap:wrap;gap:0;margin-bottom:40px;border-top:1.5px solid var(--pink);border-bottom:1.5px solid var(--pink);padding:20px 0;">
-            <div style="padding-right:28px;border-right:1.5px solid var(--pink);">
-              <p class="body-font" style="font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cherry);margin-bottom:5px;">Reading Period</p>
-              <p class="body-font" style="font-size:15px;font-weight:600;color:var(--ink);">May 1 – May 31</p>
-            </div>
-            <div style="padding:0 28px;border-right:1.5px solid var(--pink);">
-              <p class="body-font" style="font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cherry);margin-bottom:5px;">Discussion</p>
-              <p class="body-font" style="font-size:15px;font-weight:600;color:var(--ink);">June 7, 2 pm EST</p>
-            </div>
-            <div style="padding-left:28px;">
-              <p class="body-font" style="font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cherry);margin-bottom:5px;">Pages</p>
-              <p class="body-font" style="font-size:15px;font-weight:600;color:var(--ink);">432 pages</p>
-            </div>
+          <div class="anim-up d4" style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
+            <a href="#join" class="btn btn-red"><span>Request an Invite</span></a>
+            <a href="#book" class="btn btn-outline-red"><span>This Month's Pick</span></a>
           </div>
-
-          <a href="#join" class="btn btn-red"><span>Get the Book &amp; Join Us</span></a>
         </div>
 
       </div>
-    </div>
-  </section>
+    </section>
 
 
-  <!-- ════════════════ EVENTS ════════════════ -->
-  <section id="events" style="background:var(--cream);padding:100px 24px;border-top:1px solid var(--pink-light);">
-    <div style="max-width:1100px;margin:0 auto;">
+    <!-- ════════════════ CURRENT BOOK PICK ════════════════ -->
+    <section id="book" class="book-section" style="background:var(--cream);padding:100px 24px;">
+      <div style="max-width:1100px;margin:0 auto;">
 
-      <div class="reveal" style="text-align:center;margin-bottom:64px;">
-        <span class="eyebrow">Mark Your Calendar</span>
-        <h2 class="heading" style="font-size:clamp(44px,7vw,86px);color:var(--ink);line-height:.95;font-weight:900;letter-spacing:-.03em;margin-top:12px;">
-          Upcoming Events
-        </h2>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:2px;">
-
-        <!-- Event 1 -->
-        <div class="reveal" style="display:flex;flex-wrap:wrap;align-items:center;gap:32px;padding:36px 40px;background:#fff;border-left:4px solid var(--cherry);transition:background .25s ease;" onmouseenter="this.style.background='var(--pink-light)'" onmouseleave="this.style.background='#fff'">
-          <div style="flex-shrink:0;text-align:center;min-width:64px;">
-            <p class="heading" style="font-size:36px;font-weight:900;color:var(--cherry);line-height:1;">07</p>
-            <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);">Jun</p>
-          </div>
-          <div style="width:1px;height:52px;background:var(--pink);flex-shrink:0;" class="hide-mobile"></div>
-          <div style="flex:1;min-width:220px;">
-            <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cherry);margin-bottom:6px;">Virtual · 2:00 PM EST</p>
-            <h3 class="heading" style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;">June Book Discussion — Pride &amp; Prejudice</h3>
-            <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.6;">Hot takes, Darcy debates, and mimosas. Bring your notes and your opinions.</p>
-          </div>
-          <a href="#join" class="btn btn-red" style="flex-shrink:0;"><span>RSVP</span></a>
-        </div>
-
-        <!-- Event 2 -->
-        <div class="reveal rv2" style="display:flex;flex-wrap:wrap;align-items:center;gap:32px;padding:36px 40px;background:#fff;border-left:4px solid var(--pink);transition:background .25s ease;" onmouseenter="this.style.background='var(--pink-light)'" onmouseleave="this.style.background='#fff'">
-          <div style="flex-shrink:0;text-align:center;min-width:64px;">
-            <p class="heading" style="font-size:36px;font-weight:900;color:var(--cherry);line-height:1;">21</p>
-            <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);">Jun</p>
-          </div>
-          <div style="width:1px;height:52px;background:var(--pink);flex-shrink:0;" class="hide-mobile"></div>
-          <div style="flex:1;min-width:220px;">
-            <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cherry);margin-bottom:6px;">In-Person · New York, NY</p>
-            <h3 class="heading" style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;">Summer Brunch &amp; Book Swap</h3>
-            <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.6;">Bring a book you loved, leave with one you haven't read. Brunch included.</p>
-          </div>
-          <a href="#join" class="btn btn-outline-red" style="flex-shrink:0;"><span>Learn More</span></a>
-        </div>
-
-        <!-- Event 3 -->
-        <div class="reveal rv3" style="display:flex;flex-wrap:wrap;align-items:center;gap:32px;padding:36px 40px;background:#fff;border-left:4px solid var(--cherry);transition:background .25s ease;" onmouseenter="this.style.background='var(--pink-light)'" onmouseleave="this.style.background='#fff'">
-          <div style="flex-shrink:0;text-align:center;min-width:64px;">
-            <p class="heading" style="font-size:36px;font-weight:900;color:var(--cherry);line-height:1;">12</p>
-            <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);">Jul</p>
-          </div>
-          <div style="width:1px;height:52px;background:var(--pink);flex-shrink:0;" class="hide-mobile"></div>
-          <div style="flex:1;min-width:220px;">
-            <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cherry);margin-bottom:6px;">Virtual · 1:00 PM EST</p>
-            <h3 class="heading" style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;">July Pick Announcement + Author Q&amp;A</h3>
-            <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.6;">Find out what we're reading next — and hear straight from the author.</p>
-          </div>
-          <a href="#join" class="btn btn-outline-red" style="flex-shrink:0;"><span>Learn More</span></a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════ ABOUT / COMMUNITY ════════════════ -->
-  <section id="about" style="padding:100px 24px;position:relative;overflow:hidden;background:#fff;">
-
-    <!-- Community photo background -->
-    <div aria-hidden="true" style="position:absolute;inset:0;background:url('./images/community.jpg') center/cover no-repeat;pointer-events:none;"></div>
-    <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(249,206,219,.88) 0%, rgba(253,232,241,.82) 50%, rgba(249,206,219,.92) 100%);pointer-events:none;"></div>
-
-    <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;">
-
-      <div class="reveal" style="text-align:center;margin-bottom:64px;">
-        <span class="eyebrow">Our Community</span>
-        <h2 class="heading" style="font-size:clamp(44px,7vw,86px);color:var(--ink);line-height:.95;font-weight:900;letter-spacing:-.03em;margin-top:12px;">
-          Made for Bold Women
-        </h2>
-        <p class="body-font" style="font-size:17px;font-style:italic;line-height:1.7;color:var(--ink-mid);max-width:520px;margin:18px auto 0;">
-          A space for women in their mid-20s to 30s who love books, meaningful friendships, and progressive-minded conversation.
-        </p>
-      </div>
-
-      <!-- Three cards, middle floats up -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start;">
-        <div class="reveal feature-card">
-          <div class="feature-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-            </svg>
-          </div>
-          <h3 class="body-font" style="font-size:21px;font-weight:700;color:var(--ink);margin-bottom:12px;">Curated Monthly Reads</h3>
-          <p class="body-font" style="font-size:15px;line-height:1.75;color:var(--ink-mid);">
-            One great book a month — fiction, memoir, essays. No gatekeeping, just stories worth talking about.
-          </p>
-        </div>
-
-        <div class="reveal rv2 feature-card" style="transform:translateY(-16px);">
-          <div class="feature-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-          </div>
-          <h3 class="body-font" style="font-size:21px;font-weight:700;color:var(--ink);margin-bottom:12px;">Live Brunch Discussions</h3>
-          <p class="body-font" style="font-size:15px;line-height:1.75;color:var(--ink-mid);">
-            Monthly virtual brunch — hot takes, deep dives, and a lot of laughing. No spoiler guilt.
-          </p>
-        </div>
-
-        <div class="reveal rv3 feature-card">
-          <div class="feature-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </div>
-          <h3 class="body-font" style="font-size:21px;font-weight:700;color:var(--ink);margin-bottom:12px;">Community &amp; Perks</h3>
-          <p class="body-font" style="font-size:15px;line-height:1.75;color:var(--ink-mid);">
-            Private community, exclusive content, and member perks. The warmest corner of the internet.
-          </p>
-        </div>
-      </div>
-
-      <!-- Stats row -->
-      <div class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);margin-top:64px;border-top:1px solid rgba(227,38,54,.15);padding-top:52px;text-align:center;">
-        <div style="border-right:1px solid rgba(227,38,54,.15);padding:0 20px;">
-          <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">12k+</p>
-          <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Members</p>
-        </div>
-        <div style="border-right:1px solid rgba(227,38,54,.15);padding:0 20px;">
-          <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">48</p>
-          <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Books Read</p>
-        </div>
-        <div style="padding:0 20px;">
-          <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">4 yrs</p>
-          <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Running Strong</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <!-- ════════════════ INVITE REQUEST ════════════════ -->
-  <section id="join" style="background:var(--cherry);padding:100px 24px;position:relative;overflow:hidden;">
-
-    <div aria-hidden="true" style="position:absolute;inset:0;background-image:repeating-linear-gradient(transparent,transparent 28px,rgba(255,255,255,.06) 28px,rgba(255,255,255,.06) 56px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(255,255,255,.06) 28px,rgba(255,255,255,.06) 56px);pointer-events:none;"></div>
-    <div aria-hidden="true" style="position:absolute;width:500px;height:500px;border-radius:50%;background:#fff;opacity:.04;top:-180px;right:-140px;pointer-events:none;"></div>
-    <div aria-hidden="true" style="position:absolute;width:340px;height:340px;border-radius:50%;background:#fff;opacity:.03;bottom:-120px;left:-100px;pointer-events:none;"></div>
-
-    <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;">
-      <div class="join-grid">
-
-        <!-- Left: context + perks -->
-        <div class="reveal">
-          <span class="eyebrow-white">Membership</span>
-          <h2 class="heading" style="font-size:clamp(44px,6.5vw,82px);color:#fff;line-height:.92;font-weight:900;letter-spacing:-.03em;margin-top:14px;margin-bottom:28px;">
-            Request an&nbsp;Invite
+        <div class="reveal" style="text-align:center;margin-bottom:64px;">
+          <span class="eyebrow">Reading Right Now</span>
+          <h2 class="heading" style="font-size:clamp(44px,7vw,86px);color:var(--cherry);line-height:.95;font-weight:900;letter-spacing:-.03em;margin-top:12px;">
+            This Month's Pick
           </h2>
+        </div>
 
-          <div style="border-left:3px solid rgba(255,255,255,.35);padding:14px 22px;margin-bottom:36px;background:rgba(255,255,255,.08);">
-            <p class="body-font" style="font-size:15px;color:#fff;line-height:1.7;">
-              Core Brunch Babe membership is currently full. However, we'd love to have you in our <strong>Book Babe</strong> community — submit a request below to get started.
+        <div style="display:flex;flex-wrap:wrap;gap:64px;align-items:center;">
+
+          <!-- Cover -->
+          <div class="reveal" style="flex-shrink:0;position:relative;">
+            <div class="gingham-bg" aria-hidden="true" style="position:absolute;width:260px;height:355px;top:18px;left:18px;opacity:.5;border-radius:2px;"></div>
+
+            <div class="book-shadow" style="position:relative;width:240px;height:340px;overflow:hidden;border-radius:2px;">
+              <img src="./images/book-pick.jpg" alt="Book cover of Pride and Prejudice by Jane Austen" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(150deg,rgba(227,38,54,.08) 0%,transparent 50%,rgba(249,206,219,.25) 100%);"></div>
+            </div>
+
+            <div aria-hidden="true" style="position:absolute;bottom:-18px;right:-18px;width:76px;height:76px;border-radius:50%;background:var(--cherry);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(227,38,54,.38);">
+              <span class="body-font" style="color:#fff;font-size:11px;font-weight:600;text-align:center;letter-spacing:.05em;line-height:1.35;">May<br>Pick</span>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="reveal rv2" style="flex:1;min-width:280px;">
+            <span class="eyebrow" style="margin-bottom:16px;display:inline-flex;">Featured Selection</span>
+
+            <h3 class="heading" style="font-size:clamp(26px,3.5vw,42px);font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.1;margin-bottom:6px;margin-top:14px;">
+              Pride &amp; Prejudice
+            </h3>
+            <p class="body-font" style="font-size:18px;color:var(--cherry-dark);font-style:italic;margin-bottom:28px;">
+              by Jane Austen
             </p>
+
+            <blockquote style="border-left:3px solid var(--cherry);padding:4px 0 4px 22px;margin-bottom:26px;">
+              <p class="body-font" style="font-size:clamp(17px,2vw,22px);color:var(--ink);line-height:1.6;font-style:italic;font-weight:500;">
+                "It is a truth universally acknowledged…"
+              </p>
+            </blockquote>
+
+            <div style="display:flex;flex-wrap:wrap;gap:0;margin-bottom:40px;border-top:1.5px solid var(--pink);border-bottom:1.5px solid var(--pink);padding:20px 0;">
+              <div style="padding-right:28px;border-right:1.5px solid var(--pink);">
+                <p class="body-font" style="font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cherry-dark);margin-bottom:5px;">Reading Period</p>
+                <p class="body-font" style="font-size:15px;font-weight:600;color:var(--ink);">May 1 – May 31</p>
+              </div>
+              <div style="padding:0 28px;border-right:1.5px solid var(--pink);">
+                <p class="body-font" style="font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cherry-dark);margin-bottom:5px;">Discussion</p>
+                <p class="body-font" style="font-size:15px;font-weight:600;color:var(--ink);">June 7, 2 pm EST</p>
+              </div>
+              <div style="padding-left:28px;">
+                <p class="body-font" style="font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cherry-dark);margin-bottom:5px;">Pages</p>
+                <p class="body-font" style="font-size:15px;font-weight:600;color:var(--ink);">432 pages</p>
+              </div>
+            </div>
+
+            <a href="#join" class="btn btn-red"><span>Get the Book &amp; Join Us</span></a>
           </div>
 
-          <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:20px;">As a Book Babe, you'll receive</p>
+        </div>
+      </div>
+    </section>
 
-          <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:40px;">
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <span style="font-size:17px;flex-shrink:0;line-height:1.5;">✨</span>
-              <p class="body-font" style="color:#fff;font-size:16px;line-height:1.55;">Invitations to exclusive Brunch Babes events</p>
-            </div>
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <span style="font-size:17px;flex-shrink:0;line-height:1.5;">✨</span>
-              <p class="body-font" style="color:#fff;font-size:16px;line-height:1.55;">Club updates and announcements</p>
-            </div>
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <span style="font-size:17px;flex-shrink:0;line-height:1.5;">✨</span>
-              <p class="body-font" style="color:#fff;font-size:16px;line-height:1.55;">First access to core membership spots</p>
-            </div>
-          </div>
 
-          <p class="body-font" style="font-size:14px;font-style:italic;color:rgba(255,255,255,.6);line-height:1.7;">
-            Requests are reviewed individually.<br>We'll be in touch if it's a great fit.
+    <!-- ════════════════ EVENTS ════════════════ -->
+    <section id="events" style="background:var(--cream);padding:100px 24px;border-top:1px solid var(--pink-light);">
+      <div style="max-width:1100px;margin:0 auto;">
+
+        <div class="reveal" style="text-align:center;margin-bottom:64px;">
+          <span class="eyebrow">Mark Your Calendar</span>
+          <h2 class="heading" style="font-size:clamp(44px,7vw,86px);color:var(--ink);line-height:.95;font-weight:900;letter-spacing:-.03em;margin-top:12px;">
+            Upcoming Events
+          </h2>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:2px;">
+
+          <!-- Event 1 -->
+          <article class="reveal event-row" style="border-left:4px solid var(--cherry);">
+            <div style="flex-shrink:0;text-align:center;min-width:64px;">
+              <p class="heading" style="font-size:36px;font-weight:900;color:var(--cherry);line-height:1;">
+                <span aria-label="June 7">07</span>
+              </p>
+              <p class="body-font" aria-hidden="true" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);">Jun</p>
+            </div>
+            <div aria-hidden="true" style="width:1px;height:52px;background:var(--pink);flex-shrink:0;" class="hide-mobile"></div>
+            <div style="flex:1;min-width:200px;">
+              <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cherry-dark);margin-bottom:6px;">Virtual · 2:00 PM EST</p>
+              <h3 class="heading" style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;">June Book Discussion — Pride &amp; Prejudice</h3>
+              <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.6;">Hot takes, Darcy debates, and mimosas. Bring your notes and your opinions.</p>
+            </div>
+            <a href="#join" class="btn btn-red" style="flex-shrink:0;"
+              aria-label="RSVP for June Book Discussion on June 7"><span>RSVP</span></a>
+          </article>
+
+          <!-- Event 2 -->
+          <article class="reveal rv2 event-row" style="border-left:4px solid var(--pink);">
+            <div style="flex-shrink:0;text-align:center;min-width:64px;">
+              <p class="heading" style="font-size:36px;font-weight:900;color:var(--cherry);line-height:1;">
+                <span aria-label="June 21">21</span>
+              </p>
+              <p class="body-font" aria-hidden="true" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);">Jun</p>
+            </div>
+            <div aria-hidden="true" style="width:1px;height:52px;background:var(--pink);flex-shrink:0;" class="hide-mobile"></div>
+            <div style="flex:1;min-width:200px;">
+              <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cherry-dark);margin-bottom:6px;">In-Person · New York, NY</p>
+              <h3 class="heading" style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;">Summer Brunch &amp; Book Swap</h3>
+              <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.6;">Bring a book you loved, leave with one you haven't read. Brunch included.</p>
+            </div>
+            <a href="#join" class="btn btn-outline-red" style="flex-shrink:0;"
+              aria-label="Learn more about Summer Brunch &amp; Book Swap on June 21"><span>Learn More</span></a>
+          </article>
+
+          <!-- Event 3 -->
+          <article class="reveal rv3 event-row" style="border-left:4px solid var(--cherry);">
+            <div style="flex-shrink:0;text-align:center;min-width:64px;">
+              <p class="heading" style="font-size:36px;font-weight:900;color:var(--cherry);line-height:1;">
+                <span aria-label="July 12">12</span>
+              </p>
+              <p class="body-font" aria-hidden="true" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);">Jul</p>
+            </div>
+            <div aria-hidden="true" style="width:1px;height:52px;background:var(--pink);flex-shrink:0;" class="hide-mobile"></div>
+            <div style="flex:1;min-width:200px;">
+              <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cherry-dark);margin-bottom:6px;">Virtual · 1:00 PM EST</p>
+              <h3 class="heading" style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px;">July Pick Announcement + Author Q&amp;A</h3>
+              <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.6;">Find out what we're reading next — and hear straight from the author.</p>
+            </div>
+            <a href="#join" class="btn btn-outline-red" style="flex-shrink:0;"
+              aria-label="Learn more about July Pick Announcement and Author Q&amp;A on July 12"><span>Learn More</span></a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ════════════════ ABOUT / COMMUNITY ════════════════ -->
+    <section id="about" style="padding:100px 24px;position:relative;overflow:hidden;background:#fff;">
+
+      <div aria-hidden="true" style="position:absolute;inset:0;background:url('./images/community.jpg') center/cover no-repeat;pointer-events:none;"></div>
+      <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(249,206,219,.88) 0%, rgba(253,232,241,.82) 50%, rgba(249,206,219,.92) 100%);pointer-events:none;"></div>
+
+      <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;">
+
+        <div class="reveal" style="text-align:center;margin-bottom:64px;">
+          <span class="eyebrow">Our Community</span>
+          <h2 class="heading" style="font-size:clamp(44px,7vw,86px);color:var(--ink);line-height:.95;font-weight:900;letter-spacing:-.03em;margin-top:12px;">
+            Made for Bold Women
+          </h2>
+          <p class="body-font" style="font-size:17px;font-style:italic;line-height:1.7;color:var(--ink-mid);max-width:520px;margin:18px auto 0;">
+            A space for women in their mid-20s to 30s who love books, meaningful friendships, and progressive-minded conversation.
           </p>
         </div>
 
-        <!-- Right: form panel -->
-        <div class="reveal rv2">
-          <div style="background:#fff;padding:52px 48px;">
-            <p class="heading" style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px;">Book Babe Application</p>
-            <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.65;margin-bottom:36px;">A curated community of women who stay connected through exclusive event invites, club updates, and first access when a core membership spot opens.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start;">
+          <div class="reveal feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            </div>
+            <h3 class="body-font" style="font-size:21px;font-weight:700;color:var(--ink);margin-bottom:12px;">Curated Monthly Reads</h3>
+            <p class="body-font" style="font-size:15px;line-height:1.75;color:var(--ink-mid);">
+              One great book a month — fiction, memoir, essays. No gatekeeping, just stories worth talking about.
+            </p>
+          </div>
 
-            <form id="invite-form" style="display:flex;flex-direction:column;gap:20px;" onsubmit="handleJoin(event)">
-              <div>
-                <label class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">Name</label>
-                <input class="invite-input" type="text" id="field-name" required placeholder="Your full name">
-              </div>
-              <div>
-                <label class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">Instagram</label>
-                <input class="invite-input" type="text" id="field-instagram" required placeholder="@yourhandle">
-              </div>
-              <div>
-                <label class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">Email</label>
-                <input class="invite-input" type="email" id="field-email" required placeholder="your@email.com">
-              </div>
-              <div>
-                <label class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">How did you hear about us?</label>
-                <input class="invite-input" type="text" id="field-referral" placeholder="Instagram, a friend, Google…">
-              </div>
-              <button type="submit" class="btn btn-red" style="width:100%;padding:16px;font-size:11.5px;margin-top:4px;"><span>Request an Invite</span></button>
-            </form>
+          <div class="reveal rv2 feature-card" style="transform:translateY(-16px);">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h3 class="body-font" style="font-size:21px;font-weight:700;color:var(--ink);margin-bottom:12px;">Live Brunch Discussions</h3>
+            <p class="body-font" style="font-size:15px;line-height:1.75;color:var(--ink-mid);">
+              Monthly virtual brunch — hot takes, deep dives, and a lot of laughing. No spoiler guilt.
+            </p>
+          </div>
 
-            <p id="join-msg" class="body-font" style="font-size:14px;color:var(--ink-mid);margin-top:20px;min-height:20px;line-height:1.65;"></p>
+          <div class="reveal rv3 feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </div>
+            <h3 class="body-font" style="font-size:21px;font-weight:700;color:var(--ink);margin-bottom:12px;">Community &amp; Perks</h3>
+            <p class="body-font" style="font-size:15px;line-height:1.75;color:var(--ink-mid);">
+              Private community, exclusive content, and member perks. The warmest corner of the internet.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="reveal stats-grid">
+          <div class="stats-col">
+            <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">12k+</p>
+            <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Members</p>
+          </div>
+          <div class="stats-col">
+            <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">48</p>
+            <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Books Read</p>
+          </div>
+          <div class="stats-col">
+            <p class="heading" style="font-size:clamp(52px,7vw,74px);color:var(--cherry);line-height:1;">4 yrs</p>
+            <p class="body-font" style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid);margin-top:8px;">Running Strong</p>
           </div>
         </div>
 
       </div>
-    </div>
-  </section>
+    </section>
+
+
+    <!-- ════════════════ INVITE REQUEST ════════════════ -->
+    <section id="join" style="background:var(--cherry);padding:100px 24px;position:relative;overflow:hidden;">
+
+      <div aria-hidden="true" style="position:absolute;inset:0;background-image:repeating-linear-gradient(transparent,transparent 28px,rgba(255,255,255,.06) 28px,rgba(255,255,255,.06) 56px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(255,255,255,.06) 28px,rgba(255,255,255,.06) 56px);pointer-events:none;"></div>
+      <div aria-hidden="true" style="position:absolute;width:500px;height:500px;border-radius:50%;background:#fff;opacity:.04;top:-180px;right:-140px;pointer-events:none;"></div>
+      <div aria-hidden="true" style="position:absolute;width:340px;height:340px;border-radius:50%;background:#fff;opacity:.03;bottom:-120px;left:-100px;pointer-events:none;"></div>
+
+      <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;">
+        <div class="join-grid">
+
+          <!-- Left -->
+          <div class="reveal">
+            <span class="eyebrow-white">Membership</span>
+            <h2 class="heading" style="font-size:clamp(44px,6.5vw,82px);color:#fff;line-height:.92;font-weight:900;letter-spacing:-.03em;margin-top:14px;margin-bottom:28px;">
+              Request an&nbsp;Invite
+            </h2>
+
+            <div style="border-left:3px solid rgba(255,255,255,.35);padding:14px 22px;margin-bottom:36px;background:rgba(255,255,255,.08);">
+              <p class="body-font" style="font-size:15px;color:#fff;line-height:1.7;">
+                Core Brunch Babe membership is currently full. However, we'd love to have you in our <strong>Book Babe</strong> community — submit a request below to get started.
+              </p>
+            </div>
+
+            <p class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:20px;">As a Book Babe, you'll receive</p>
+
+            <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:40px;">
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <span aria-hidden="true" style="font-size:17px;flex-shrink:0;line-height:1.5;">✨</span>
+                <p class="body-font" style="color:#fff;font-size:16px;line-height:1.55;">Invitations to exclusive Brunch Babes events</p>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <span aria-hidden="true" style="font-size:17px;flex-shrink:0;line-height:1.5;">✨</span>
+                <p class="body-font" style="color:#fff;font-size:16px;line-height:1.55;">Club updates and announcements</p>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:14px;">
+                <span aria-hidden="true" style="font-size:17px;flex-shrink:0;line-height:1.5;">✨</span>
+                <p class="body-font" style="color:#fff;font-size:16px;line-height:1.55;">First access to core membership spots</p>
+              </div>
+            </div>
+
+            <p class="body-font" style="font-size:14px;font-style:italic;color:rgba(255,255,255,.72);line-height:1.7;">
+              Requests are reviewed individually.<br>We'll be in touch if it's a great fit.
+            </p>
+          </div>
+
+          <!-- Right: form -->
+          <div class="reveal rv2">
+            <div class="form-panel">
+              <p class="heading" style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px;">Book Babe Application</p>
+              <p class="body-font" style="font-size:14px;color:var(--ink-mid);line-height:1.65;margin-bottom:36px;">A curated community of women who stay connected through exclusive event invites, club updates, and first access when a core membership spot opens.</p>
+
+              <form id="invite-form" style="display:flex;flex-direction:column;gap:20px;" onsubmit="handleJoin(event)" novalidate>
+                <div>
+                  <label for="field-name" class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">Name <span aria-hidden="true" style="color:var(--cherry);">*</span></label>
+                  <input class="invite-input" type="text" id="field-name" name="name" required autocomplete="name" placeholder="Your full name">
+                </div>
+                <div>
+                  <label for="field-instagram" class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">Instagram <span aria-hidden="true" style="color:var(--cherry);">*</span></label>
+                  <input class="invite-input" type="text" id="field-instagram" name="instagram" required autocomplete="off" placeholder="@yourhandle">
+                </div>
+                <div>
+                  <label for="field-email" class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">Email <span aria-hidden="true" style="color:var(--cherry);">*</span></label>
+                  <input class="invite-input" type="email" id="field-email" name="email" required autocomplete="email" placeholder="your@email.com">
+                </div>
+                <div>
+                  <label for="field-referral" class="body-font" style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mid);display:block;margin-bottom:8px;">How did you hear about us?</label>
+                  <input class="invite-input" type="text" id="field-referral" name="referral" autocomplete="off" placeholder="Instagram, a friend, Google…">
+                </div>
+                <button type="submit" class="btn btn-red" style="width:100%;padding:16px;font-size:11.5px;margin-top:4px;"><span>Request an Invite</span></button>
+              </form>
+
+              <p id="join-msg" class="body-font"
+                role="status" aria-live="polite"
+                style="font-size:14px;color:var(--ink-mid);margin-top:20px;min-height:20px;line-height:1.65;"></p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
 
 
   <!-- ════════════════ FOOTER ════════════════ -->
@@ -654,14 +859,14 @@
     <div style="max-width:1100px;margin:0 auto;">
       <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.1);">
         <img src="./brand_assets/BB LOGO_03.svg" alt="The Brunch Babes Book Club" style="height:100px;filter:brightness(0) invert(1);opacity:.85;">
-        <div style="display:flex;gap:28px;">
-          <a href="#" class="footer-link">Instagram</a>
-          <a href="#" class="footer-link">TikTok</a>
-          <a href="#" class="footer-link">Goodreads</a>
-        </div>
+        <nav aria-label="Social media links" style="display:flex;gap:28px;">
+          <a href="#" class="footer-link" aria-label="Brunch Babes on Instagram">Instagram</a>
+          <a href="#" class="footer-link" aria-label="Brunch Babes on TikTok">TikTok</a>
+          <a href="#" class="footer-link" aria-label="Brunch Babes on Goodreads">Goodreads</a>
+        </nav>
       </div>
       <div style="padding-top:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;">
-        <p class="body-font" style="font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.06em;">
+        <p class="body-font" style="font-size:12px;color:rgba(255,255,255,.4);letter-spacing:.06em;">
           © 2026 The Brunch Babes Book Club. All rights reserved.
         </p>
         <div style="display:flex;gap:18px;">
@@ -674,44 +879,75 @@
 
 
   <script>
-    // Nav scroll shadow
+    // ── Nav scroll shadow ──
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
     }, { passive: true });
 
-    // Scroll reveal
-    const revealEls = document.querySelectorAll('.reveal');
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(el => {
-        if (el.isIntersecting) {
-          el.target.classList.add('in');
-          obs.unobserve(el.target);
-        }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
-    revealEls.forEach(el => obs.observe(el));
+    // ── Reduced motion check ──
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Invite request submit
+    // ── Scroll reveal ──
+    if (reduceMotion) {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    } else {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    }
+
+    // ── Mobile menu ──
+    const menuBtn    = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeBtn   = document.getElementById('close-menu-btn');
+
+    function openMenu() {
+      mobileMenu.classList.add('open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeMenu() {
+      mobileMenu.classList.remove('open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      menuBtn.focus();
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+    // ── Invite form submit ──
     function handleJoin(e) {
       e.preventDefault();
       const form = document.getElementById('invite-form');
       const msg  = document.getElementById('join-msg');
       form.style.display = 'none';
-      msg.textContent = 'We look forward to reviewing your request and will be in touch soon.';
-      msg.style.color = 'var(--cherry)';
+      msg.textContent    = 'We look forward to reviewing your request and will be in touch soon.';
+      msg.style.color      = 'var(--cherry)';
       msg.style.fontWeight = '600';
-      msg.style.fontSize = '15px';
+      msg.style.fontSize   = '15px';
     }
 
-    // Smooth scroll with nav offset
+    // ── Smooth scroll with nav offset ──
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const target = document.querySelector(a.getAttribute('href'));
         if (target) {
           e.preventDefault();
           const top = target.getBoundingClientRect().top + window.scrollY - nav.offsetHeight - 12;
-          window.scrollTo({ top, behavior: 'smooth' });
+          window.scrollTo({ top, behavior: reduceMotion ? 'instant' : 'smooth' });
         }
       });
     });
